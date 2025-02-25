@@ -1,0 +1,11 @@
+import { z } from "zod"
+
+ 
+ export const signInSchema = z.object(
+    {
+        content : z.string()
+        .min(10 , {message : "content must be atleast 10 charecter long"})
+        .max(300 , {message : "content must not be more than 300 charecters"})
+    }
+ )
+ 
