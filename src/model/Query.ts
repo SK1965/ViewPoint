@@ -21,5 +21,5 @@ const QuerySchema  : Schema<Query> = new Schema({
             }, 
 
 },{timestamps  : true})
-const QueryModel = mongoose.model("Query" , QuerySchema);
+const QueryModel =  (mongoose.models.Query as mongoose.Model<Query>)|| mongoose.model("Query" , QuerySchema);
 export default  QueryModel

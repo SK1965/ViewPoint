@@ -15,14 +15,15 @@ export async function GET(request: Request) {
         const queryparam ={
             username : searchParams.get("username")
         };
-
         const result = usernameQuerySchema.safeParse(queryparam);
+
+        
         if(!result.success){
            // const usernameError = result.error.format().username?._errors ||[]
             return new Response(
                 JSON.stringify({
                     success: false,
-                    message: "Invalid username"
+                    message: "Invalid username."
                 }),
                 {
                     status: 400

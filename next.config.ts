@@ -1,10 +1,7 @@
 // next.config.ts
 
 const config = {
-  reactStrictMode: true,
-  experimental: {
-    appDir: true, // Enable app directory structure
-  },
+  reactStrictMode: true
 };
 
 export default config;
