@@ -29,7 +29,8 @@ export const authOptions: NextAuthOptions = {
                             { email: credentials.identifier } 
                         ]
                     });
-
+                    console.log(user);
+                    
                     if (!user) {
                         throw new Error("No user found with this username or email");
                     }
@@ -73,9 +74,17 @@ export const authOptions: NextAuthOptions = {
 
             return session;
         },
-        async redirect({url , baseUrl}){
-            return "/"
-        }
+        async redirect({ url, baseUrl }) {
+            // Control the redirect URL after authentication
+            // You can customize this further depending on the use case
+            // For example, based on user roles or a specific URL.
+            if (url === "/sign-in" || url === "/") {
+              return baseUrl; // Redirect to the base URL or a specific page
+            }
+      
+            // Optional: If you want to redirect users based on custom logic
+            return url; // Redirect to the requested URL or a fallback
+          },
         
     },
     pages: {

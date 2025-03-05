@@ -34,7 +34,7 @@ const SigninPage =()=>{
       toast("Login Failed" , {duration : 2000})
     }
     if(response?.url){
-      router.push('/dashboard')
+      
     }
     
     console.log(response)
@@ -78,7 +78,7 @@ const SigninPage =()=>{
               </FormItem>
             )}
           />
-          <Button type="submit">{isSubmiting ? <Loader2/>:"Submit"}</Button>
+          <Button type="submit">{isSubmiting ? <Loader2 className=' animate-spin'/>:"Submit"}</Button>
         </form>
       </Form>
     </div>

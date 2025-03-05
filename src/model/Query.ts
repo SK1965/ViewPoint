@@ -1,6 +1,7 @@
 import mongoose , {Schema , Document,  ObjectId} from "mongoose";
 
 export interface Query extends Document{
+    _id : string
     query : string ,
     likes : number ,
     owner: ObjectId;

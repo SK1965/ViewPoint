@@ -1,6 +1,7 @@
 import AuthProvider from "@/context/AuthProvider"
 import './globals.css'
 import { Toaster } from "@/components/ui/sonner"
+import Navbar from "@/components/Navbar"
 
 export const metadata = {
   title: 'Next.js',
@@ -13,13 +14,14 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <AuthProvider>
-      <body>{children}
+    <AuthProvider>
+    <html lang="en">  
+      <body>
+        <Navbar></Navbar>
+        {children}
       <Toaster/>
       </body>
-      
-      </AuthProvider>
     </html>
+    </AuthProvider>
   )
 }
