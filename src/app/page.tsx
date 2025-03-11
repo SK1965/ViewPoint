@@ -28,8 +28,11 @@ import { toast } from 'sonner';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Textarea } from '@/components/ui/textarea';
+import { formatTimeAgo } from '@/lib/utils';
+import { querySchema } from '@/schemas/querySchema';
 
 export default function Home() {
+  const [queries , setQueries] = useState<z.infer<typeof querySchema>[]>([])
   const [isSubmiting, setIsSubmiting] = useState(false)
   const resolver = zodResolver(messageSchema)
   const router = useRouter()
@@ -67,6 +70,21 @@ export default function Home() {
       setIsSubmiting(false)
     }
   }
+
+  useEffect(()=>{
+    const fetchQueries = async()=>{
+
+    try {
+      const response = await axios.get('/api/famous')
+      setQueries(response?.data?.data)
+      
+    } catch (error) {
+      toast("Something went wrong")
+    }
+    }
+    fetchQueries()
+  } , [])
+ 
   return (
     <>
       {/* Main content */}
@@ -117,18 +135,18 @@ export default function Home() {
           className="w-full max-w-lg md:max-w-xl"
         >
           <CarouselContent>
-            {messages.map((message, index) => (
+            {queries.map((message, index) => (
               <CarouselItem key={index} className="p-4">
                 <Card className=''>
                   <CardHeader>
-                    <CardTitle>{message.title}</CardTitle>
+                    <CardTitle>Message by,{message.owner}</CardTitle>
                   </CardHeader>
                   <CardContent className="flex flex-col md:flex-row items-start space-y-2 md:space-y-0 md:space-x-4">
                     <Mail className="flex-shrink-0" />
                     <div>
-                      <p>{message.content}</p>
+                      <p>{message.query}</p>
                       <p className="text-xs text-muted-foreground">
-                        {message.received}
+                        {formatTimeAgo(message.createdAt)}
                       </p>
                     </div>
                     
@@ -139,7 +157,7 @@ export default function Home() {
                         {/* Heart Icon */}
                         <Heart className="w-8 h-8 fill-red-600 text-red-500" />
                         {/* Like count below the Heart Icon */}
-                        <span className="">2000</span>
+                        <span className="">{message.likes}</span>
                       </div>
                     </div>
                   
