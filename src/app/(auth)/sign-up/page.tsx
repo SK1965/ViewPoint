@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -26,7 +25,7 @@ import { signUpSchema } from '@/schemas/signUpSchema'
 import axios  from 'axios'
 
 
-export default function page() {
+export default function SignUpPage() {
   const [username , setUsername] = useState('')
   const [usernameMessage , setUsernameMessage]= useState('')
   const [isCheckingUsername , setIsCheckingUsername] = useState(false)

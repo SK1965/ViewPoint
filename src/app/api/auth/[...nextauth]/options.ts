@@ -59,8 +59,9 @@ export const authOptions: NextAuthOptions = {
                 token._id = user._id?.toString();
                 token.username = user.username;
                 token.isVerified = user.isVerified;
-                token.isAcceptingMessage = user.isAcceptingMessage;
             }
+            console.log("created token" , token);
+            
             return token;
         },
         async session({ session, token}) {
@@ -69,9 +70,9 @@ export const authOptions: NextAuthOptions = {
                 session.user._id = token._id;
                 session.user.username = token .username;
                 session.user.isVerified = token.isVerified;
-                session.user.isAcceptingMessage = token.isAcceptingMessage;
             }
-
+            console.log("created token :" , session);
+            
             return session;
         },
         async redirect({ url, baseUrl }) {
@@ -79,16 +80,21 @@ export const authOptions: NextAuthOptions = {
             // You can customize this further depending on the use case
             // For example, based on user roles or a specific URL.
             if (url === "/sign-in" || url === "/") {
+                console.log(baseUrl);
+                
               return baseUrl; // Redirect to the base URL or a specific page
             }
       
             // Optional: If you want to redirect users based on custom logic
+            console.log(url);
+            
             return url; // Redirect to the requested URL or a fallback
           },
         
     },
     pages: {
-        signIn: "/sign-in"
+        signIn: "/sign-in",
+        error :"/error"
     },
     session: {
         strategy: "jwt" // Use JWT for session management

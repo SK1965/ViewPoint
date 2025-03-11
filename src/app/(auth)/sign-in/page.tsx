@@ -4,8 +4,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/
 import { Input } from '@/components/ui/input'
 import { signInSchema } from '@/schemas/signInSchema'
 import { zodResolver } from '@hookform/resolvers/zod'
-import axios from 'axios'
-import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 import {useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -15,7 +13,7 @@ import { signIn } from 'next-auth/react'
 
 const SigninPage =()=>{
   const [isSubmiting , setIsSubmiting] = useState(false)
-  const router = useRouter() 
+
   const form  = useForm<z.infer<typeof signInSchema>>({
         resolver : zodResolver(signInSchema) ,
         defaultValues :{
