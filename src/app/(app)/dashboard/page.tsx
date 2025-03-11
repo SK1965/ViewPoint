@@ -8,13 +8,14 @@ import { Separator } from '@radix-ui/react-separator'
 import axios from 'axios'
 import { Loader2, RefreshCcw } from 'lucide-react'
 import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 import React, { useCallback, useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
-function dashboard() {
+function Dashboard() {
   const [queries , setQueries] = useState<Query[]>([])
   const [isLoading,setIsLoading] = useState(false)
-
+  const router = useRouter()
   const handleDeleteQuery = (queryId : string)=>{
     setQueries(queries.filter((query)=>query._id !== queryId))
   }
@@ -38,19 +39,21 @@ function dashboard() {
       }
   } ,[setIsLoading ,setQueries])
 
-  useEffect(()=>{
-      if(!session || !session.user){
-        return 
-      }
+  useEffect(() => {
+    if (!session || !session.user) {
+      // Redirect to the sign-in page if no session or user
+      router.replace('/sign-in')
+    } else {
       fetchQueries()
-  },
-  [session , fetchQueries])
+    }
+  }, [session, fetchQueries, router])
   
   if(!session || !session.user){
-    return <div>Please Login</div>
+    
+    return ;
   }
 
-  const {username} = session.user as User
+  const {username} = session?.user as User
 
   const baseUrl = `${window.location.protocol}//${window.location.host}`;
   const profileUrl = `${baseUrl}/u/${username}`; 
@@ -62,7 +65,7 @@ function dashboard() {
     )
   }
   return (
-    <div className="my-8 mx-4 md:mx-8 lg:mx-auto p-6 bg-white rounded w-full max-w-6xl">
+    <div className="my-8 mx-4 md:mx-8 lg:mx-auto p-6  rounded w-full max-w-6xl">
       <h1 className="text-4xl font-bold mb-4">User Dashboard</h1>
 
       <div className="mb-4">
@@ -95,7 +98,7 @@ function dashboard() {
       </Button>
       <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
         {queries.length > 0 ? (
-          queries.map((message, index) => (
+          queries.map((message) => (
             <MessageCard
               key={message._id}
               message={message}
@@ -110,4 +113,4 @@ function dashboard() {
   )
 }
  
-export default dashboard
+export default Dashboard
