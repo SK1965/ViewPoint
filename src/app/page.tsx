@@ -27,6 +27,7 @@ import axios from 'axios';
 import { toast } from 'sonner';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { Textarea } from '@/components/ui/textarea';
 
 export default function Home() {
   const [isSubmiting, setIsSubmiting] = useState(false)
@@ -53,6 +54,7 @@ export default function Home() {
         {query :content , username : session.user.username}
       )
       toast(response.data.message || "Post Created")
+      form.reset()
     }
     catch(error){
       if(axios.isAxiosError(error)){
@@ -85,19 +87,19 @@ export default function Home() {
         <div className="flex w-7xl justify-center items-center space-x-1">
           
         <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 space-x-1  flex">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2 space-x-1 flex items-center">
           <FormField
             name="content"
             control={form.control}
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input placeholder="share your story..." {...field} />
+                <Textarea placeholder="share you story..."  className='min-w-96' {...field} />
                 </FormControl>
               </FormItem>
             )}
           />
-          <Button type="submit">{isSubmiting ? <Loader2 className=' animate-spin'/>:"Submit"}</Button>
+          <Button type="submit"  >{isSubmiting ? <Loader2 className=' animate-spin'/>:"Post"}</Button>
         </form>
       </Form>
         </div>
@@ -105,7 +107,7 @@ export default function Home() {
         <span className='text-xl mb-4'>
           Dive into our stories
           </span>
-          <Button className='text-lg lg:py-6 lg:px-4 bg-auto'>Explore</Button>
+          <Button className='text-lg lg:py-6 lg:px-4 bg-auto' onClick={()=>router.push('/explore')}>Explore</Button>
 
         </div>
 
