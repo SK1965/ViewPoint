@@ -2,6 +2,7 @@ import AuthProvider from "@/context/AuthProvider"
 import './globals.css'
 import { Toaster } from "@/components/ui/sonner"
 import Navbar from "@/components/Navbar"
+import { ThemeProvider } from "@/context/ThemeProvider"
 
 export const metadata = {
   title: 'Next.js',
@@ -15,10 +16,15 @@ export default function RootLayout({
 }) {
   return (
     <AuthProvider>
-    <html lang="en">  
-      <body>
+    <html lang="en"  suppressHydrationWarning={true} >  
+      <body className="min-h-screen">
+      <ThemeProvider attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange>
         <Navbar></Navbar>
         {children}
+        </ThemeProvider>
       <Toaster/>
       </body>
     </html>
