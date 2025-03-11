@@ -16,7 +16,7 @@ import {
   CarouselPrevious,
 } from '@/components/ui/carousel';
 import { Input } from '@/components/ui/input';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ThreeDModel from '@/components/ThreeDModel';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -30,8 +30,10 @@ import { useRouter } from 'next/navigation';
 import { Textarea } from '@/components/ui/textarea';
 import { formatTimeAgo } from '@/lib/utils';
 import { querySchema } from '@/schemas/querySchema';
+import Like from '@/components/Like';
 
 export default function Home() {
+  const carouselRef = useRef(null);
   const [queries , setQueries] = useState<z.infer<typeof querySchema>[]>([])
   const [isSubmiting, setIsSubmiting] = useState(false)
   const resolver = zodResolver(messageSchema)
@@ -131,6 +133,7 @@ export default function Home() {
 
         {/* Carousel for Messages */}
         <Carousel
+          ref={carouselRef}
           plugins={[Autoplay({ delay: 2000 })]}
           className="w-full max-w-lg md:max-w-xl"
         >
@@ -155,9 +158,7 @@ export default function Home() {
                     <div className='relative'>
                       <div className=" absolute right-12 bottom-4 flex flex-col  space-y-2">
                         {/* Heart Icon */}
-                        <Heart className="w-8 h-8 fill-red-600 text-red-500" />
-                        {/* Like count below the Heart Icon */}
-                        <span className="">{message.likes}</span>
+                       <Like count = {message.likes}></Like>
                       </div>
                     </div>
                   
