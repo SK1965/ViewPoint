@@ -7,6 +7,8 @@ import { Mail ,Heart, Loader2 } from 'lucide-react'; // Assuming you have an ico
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Autoplay from 'embla-carousel-autoplay';
 import messages from '@/messages.json';
+import { Skeleton } from "@/components/ui/skeleton"
+
 
 import {
   Carousel,
@@ -104,17 +106,17 @@ export default function Home() {
            your passion,<br /> your truth - and let the world be a part of it.
           </p>
         </section>
-        <div className="flex w-7xl justify-center items-center space-x-1">
+        <div className="flex  justify-center items-center space-x-1 pt-4">
           
         <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2 space-x-1 flex items-center">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2  space-x-1 flex items-center">
           <FormField
             name="content"
             control={form.control}
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                <Textarea placeholder="share you story..."  className='min-w-96' {...field} />
+                <Textarea placeholder="share you story..."  className='md:w-96 w-64 ' {...field} />
                 </FormControl>
               </FormItem>
             )}
@@ -132,7 +134,17 @@ export default function Home() {
         </div>
 
         {/* Carousel for Messages */}
-        <Carousel
+       {queries.length==0 ?  
+       <div className="flex items-center m-6 py-6 space-x-4 w-full max-w-lg md:max-w-xl border-2 rounded-xl">
+       <Skeleton className="h-12 w-12 rounded-full" />
+       <div className="space-y-2">
+         <Skeleton className="h-6 w-[200px]" />
+         <Skeleton className="h-5 w-[300px]" />
+         <Skeleton className="h-3 w-[150px]" />
+
+       </div>
+     </div>
+       : <Carousel
           ref={carouselRef}
           plugins={[Autoplay({ delay: 2000 })]}
           className="w-full max-w-lg md:max-w-xl"
@@ -146,8 +158,8 @@ export default function Home() {
                   </CardHeader>
                   <CardContent className="flex flex-col md:flex-row items-start space-y-2 md:space-y-0 md:space-x-4">
                     <Mail className="flex-shrink-0" />
-                    <div>
-                      <p>{message.query}</p>
+                    <div className='w-64 md:w-96'>
+                      <p >{message.query}</p>
                       <p className="text-xs text-muted-foreground">
                         {formatTimeAgo(message.createdAt)}
                       </p>
@@ -156,7 +168,7 @@ export default function Home() {
                   </CardContent>
                     {/* Right section with Heart Icon and Like count */}
                     <div className='relative'>
-                      <div className=" absolute right-12 bottom-4 flex flex-col  space-y-2">
+                      <div className=" absolute right-8 bottom-4 flex flex-col  space-y-2">
                         {/* Heart Icon */}
                        <Like count = {message.likes}></Like>
                       </div>
@@ -166,7 +178,7 @@ export default function Home() {
               </CarouselItem>
             ))}
           </CarouselContent>
-        </Carousel>
+        </Carousel>}
       </main>
 
       {/* Footer */}

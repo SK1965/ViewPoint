@@ -1,6 +1,6 @@
 "use client"
 import { Moon, Sun, Menu, UserRound } from "lucide-react"
-import { useTheme } from "next-themes"
+import { useTheme} from "next-themes"
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { useSession, signOut } from 'next-auth/react'
@@ -26,7 +26,7 @@ const Navbar = () => {
     }
 
     return (
-        <nav className='p-2 md:p-3 shadow-md z-10'>
+        <nav className='p-2 md:p-3 shadow-md z-10 '>
             <div className="lg:mx-14 flex justify-between items-center">
                 <a href="#" className="text-xl font-bold">
                     View Point
