@@ -1,11 +1,10 @@
 'use client'
 import Like from '@/components/Like'
-import MessageCard from '@/components/MessageCard'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel'
+import { Separator } from '@/components/ui/separator'
 import { formatTimeAgo } from '@/lib/utils'
-import { Mail } from 'lucide-react'
+import { Dot, Mail, MessageCircle, Share, Share2 } from 'lucide-react'
 import React from 'react'
 
 const messages = [{
@@ -18,7 +17,7 @@ const messages = [{
 {
   owner : "Jane Doe",
   query : "Hey, I'm new here",
-  createdAt : new Date().toISOString(),
+  createdAt : Date.now()-1000000000,
   likes : 5
 },
 {
@@ -33,7 +32,7 @@ const ExporePage = () => {
     
         {messages.map((message, index) => (
             <div className="flex items-center justify-center " key={index}>
-              <Card className=''>
+              <Card className='border hover:border-accent-foreground rounded-xl w-full max-w-lg md:max-w-xl'>
                   <CardHeader>
                     <CardTitle className='flex items-center space-x-2'>
                     <Avatar className='h-12 w-12'>
@@ -43,22 +42,33 @@ const ExporePage = () => {
                       <span>
                       @{message.owner}
                       </span>
-                      </CardTitle>
-                  </CardHeader>
-                  <CardContent className="flex flex-col md:flex-row items-start space-y-2 md:space-y-0 md:space-x-8">
-                    <div className='w-64 md:w-96'>
-                      <p >{message.query}</p>
-                      <p className="text-xs text-muted-foreground">
+                      <div className='flex items-center pt-1.5'>
+                      <Dot/>
+                      <p className="relative text-xs text-muted-foreground mx-0">
                         {formatTimeAgo(message.createdAt)}
                       </p>
+                      </div>
+                      </CardTitle>
+                   <Separator></Separator> 
+                  </CardHeader>
+                  <CardContent className="flex flex-col md:flex-row items-start justify-middle space-y-2 md:space-y-0 md:space-x-8 min-h-16">
+                    <div className='w-64 md:w-96'>
+                      <p >{message.query}</p>
                     </div>
                     
                   </CardContent>
                     {/* Right section with Heart Icon and Like count */}
-                    <div className='relative'>
-                      <div className=" absolute right-8 bottom-4 flex flex-col  space-y-2">
+                    <Separator />
+                    <div className=''>
+                      <div className="flex justify-between mx-16">
                         {/* Heart Icon */}
-                       <Like count = {message.likes}></Like>
+                        
+                       <Like count = {message.likes} className="h-8 w-8"></Like>
+                       <div className='flex-col items-center justify-center'>
+                          <MessageCircle/>
+                          <span >200</span>
+                       </div>
+                      <Share2/>
                       </div>
                     </div>
                   
