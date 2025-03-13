@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { formatTimeAgo } from '@/lib/utils'
 import { Dot, Mail, MessageCircle, Share, Share2 } from 'lucide-react'
-import React from 'react'
+import React, { use } from 'react'
 
 const messages = [{
 
@@ -24,9 +24,11 @@ const messages = [{
   owner : "John Doe",
   query : "Hey, I'm new here",
   createdAt : new Date().toISOString(),
-  
+  likes:8
 }]
 const ExporePage = () => {
+
+  
   return (
     <div className=' flex-col items-center justify-center'>
     
@@ -63,7 +65,7 @@ const ExporePage = () => {
                       <div className="flex justify-between mx-16">
                         {/* Heart Icon */}
                         
-                       <Like count = {message.likes} className="h-8 w-8"></Like>
+                       <Like count = {message.likes}></Like>
                        <div className='flex-col items-center justify-center'>
                           <MessageCircle/>
                           <span >200</span>
@@ -76,7 +78,6 @@ const ExporePage = () => {
             </div>  
         ))}  
     </div>
-
   )
 }
 
