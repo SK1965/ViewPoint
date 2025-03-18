@@ -1,165 +1,198 @@
 'use client'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { Skeleton } from '@/components/ui/skeleton'
 import { formatTimeAgo } from '@/lib/utils'
+import { User } from '@/model/User'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { Separator } from '@radix-ui/react-dropdown-menu'
-import { Dot, MessageCircle, Share2 ,Heart } from 'lucide-react'
-import React from 'react'
-
-
-const message = {
-  _id : "dcjsvsqre",
-  owner : "John Doe",
-  query : "have you read the book Automic habits. if yes, what do you think about it? if not I will suggest you read it",
-  createdAt : Date.now() - (1000*60*60*12),
-  likes : 32,
-  countComments : 5
-}
-
-const comments  =[
-  {
-    _id :1,
-    messageId : "dcjsvsqre",
-    owner : "leesa",
-    comment : "yes I red it and I think it is a good book",
-    createdAt : Date.now() - ((1000*60*60*3)),
-    likes : 21
-  },
-  {
-    _id :2,
-    messageId : "dcjsvsqre",
-    owner : "animeDon",
-    comment : "I have not read it but I will try to read it",
-    createdAt : Date.now() - (1000*60*20),
-    likes :3
-  },
-  {
-    _id :3,
-    messageId : "dcjsvsqre",
-    owner: "minicop",
-    comment : "who will read books in this generation. I will rather watch the movie",
-    createdAt : Date.now() - (1000*60*100),
-    likes : 9
-  },
-  {
-    _id :4,
-    messageId : "dcjsvsqre",
-    owner : "leesa",
-    comment : "@minicop who asked you. if you don't have anything to say just keep quiet",
-    createdAt : Date.now()-(1000*60*30),
-    likes : 18
-  },
-  {
-    _id :5,
-    messageId : "dcjsvsqre",
-    owner : "minicop",
-    comment : "@leesa cool boomer,I was not supposed to hurt your feelings",
-    createdAt :  Date.now() - (1000*60*20),
-    likes : 12
-  }
-]
+import axios from 'axios'
+import { Dot, Heart, Reply, Loader2 } from 'lucide-react'
+import { useSession } from 'next-auth/react'
+import { useParams, useRouter } from 'next/navigation'
+import React, { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
+import { z } from 'zod'
 const Post = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [query, setQuery] = useState('')
+  const [comments, setComments] = useState([])
+  const { data: session } = useSession()
+  const user : User = session?.user as User
+  const router = useRouter()
+  const { postid } = useParams()
+  const form = useForm({
+    defaultValues: {
+      comment: '',
+    },
+  })
+  const onSubmit = (data: any) => {
+    setIsSubmitting(true)
+    try {
+      if (!user || !session) {
+        toast('first attempt passed')
+        router.push('/sign-in')
+      } else {
+        const comment = {
+          messageId: 123,
+        }
+      }
+    } catch (error) {} finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  useEffect(() => {
+    const loadQuery = async () => {
+      setIsLoading(true)
+      console.log(postid)
+      const response = await axios.post('/api/get-queries', { messageId: postid })
+      console.log(response.data)
+      setQuery(response.data?.data.query)
+      setComments(response.data?.data.comments)
+      setIsLoading(false)
+    }
+
+    loadQuery()
+  }, [postid])
+
+  if (isLoading) {
+    return (
+      <div className="space-y-4">
+        {/* Skeleton Loader for Card Header */}
+        <div className="flex space-x-2">
+          <Skeleton className="h-12 w-12 rounded-full" />
+          <div className="flex flex-col space-y-2">
+            <Skeleton className="w-32 h-4" />
+            <Skeleton className="w-16 h-4" />
+          </div>
+        </div>
+        <Skeleton className="h-48 w-full" />
+        <Skeleton className="h-8 w-24" />
+        <Skeleton className="h-12 w-full" />
+        {/* Skeleton Loader for Comments Section */}
+        <div className="space-y-2">
+          <Skeleton className="h-8 w-1/2" />
+          <Skeleton className="h-8 w-full" />
+          <Skeleton className="h-8 w-3/4" />
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div>
-      < Card className='border hover:border-accent-foreground rounded-none w-full max-w-screen'>
+      <Card className="border hover:border-accent-foreground rounded-none  max-w-screen">
         <CardHeader>
-          <CardTitle className='flex items-center space-x-2'>
-          <Avatar className='h-12 w-12'>
-            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
-            <span>
-            {message.owner}
-            </span>
-            <div className='flex items-center pt-1.5'>
-            <Dot/>
-            <p className="relative text-xs text-muted-foreground mx-0">
-              {formatTimeAgo(message.createdAt)}
-            </p>
+          <CardTitle className="flex items-center space-x-2">
+            <Avatar className="h-12 w-12">
+              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
+            <span>{query.owner}</span>
+            <div className="flex items-center pt-1.5">
+              <Dot />
+              <p className="relative text-xs text-muted-foreground mx-0">{formatTimeAgo(query.createdAt)}</p>
             </div>
-            </CardTitle>
-          <Separator></Separator> 
+          </CardTitle>
+          <Separator></Separator>
         </CardHeader>
         <CardContent className="flex flex-col md:flex-row items-start justify-middle space-y-1 md:space-y-0 md:space-x-4 ">
-          <div className=''>
-            <p >{message.query} </p>
+          <div>
+            <p>{query.query}</p>
           </div>
-          
         </CardContent>
-          {/* Right section with Heart Icon and Like count */}
-          <Separator />
-          <div className=''>
-            <div className="md:w-32 flex justify-between mx-16 ">
-              {/* Heart Icon */}
-              
-              <div className='flex-col items-center justify-center text-center'>
-                <Heart className='md:hover:h-5 md:hover:w-5'/>
-                <span >{message.countComments}</span>
-              </div>
-              <div className='flex-col items-center justify-center' >
-                <Share2 className='md:hover:h-5 md:hover:w-5 mx-2'/>
-                <span>share</span>
-              </div>
+        {/* Right section with Heart Icon and Like count */}
+        <Separator />
+        <div>
+          <div className="md:w-32 flex justify-between mx-16 ">
+            <div className="flex-col items-center justify-center text-center">
+              <Heart />
+              <span>{query.likes}</span>
+            </div>
+            <div className="flex-col items-center justify-center">
+              <Reply className="mx-2" />
+              <span>share</span>
             </div>
           </div>
-        
+        </div>
       </Card>
-      <div>
 
+      {/* Comment input */}
+      <div className="py-4 px-4">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="flex space-x-1 md:space-x-2">
+            <FormField
+              name="comment"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input placeholder="comment" {...field} className="w-72 md:w-96" />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <Button type="submit" variant={'secondary'}>
+              {isSubmitting ? <Loader2 className="animate-spin" /> : 'Add'}
+            </Button>
+          </form>
+        </Form>
       </div>
 
-      {/* comments bolck */} ,
-      <div className='border-2 md:min-h-96'>
-        {comments.length==0 ? 
-        <></>
-        :
-        <>
-        {comments.map((item)=>(
-          <div key={item._id} className=''>
-           <Card className='border hover:border-accent-foreground rounded-xl w-full max-w-lg md:max-w-xl'>
-                  <CardHeader>
-                    <CardTitle className='flex items-center space-x-2'>
-                    <Avatar className='h-12 w-12'>
-                      <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-                      <AvatarFallback>CN</AvatarFallback>
-                    </Avatar>
-                      <span>
-                      @{item.owner}
-                      </span>
-                      <div className='flex items-center pt-1.5'>
-                      <Dot/>
-                      <p className="relative text-xs text-muted-foreground mx-0">
-                        {formatTimeAgo(item.createdAt)}
-                      </p>
-                      </div>
-                      </CardTitle>
-                   <Separator></Separator> 
-                  </CardHeader>
-                  <CardContent className="flex flex-col md:flex-row items-start justify-middle space-y-2 md:space-y-0 md:space-x-8 ">
-                    <div className=''>
-                      <p >{item.comment}</p>
-                    </div>
-                    
-                  </CardContent>
-                    {/* Right section with Heart Icon and Like count */}
-                    <Separator />
-                    <div className=''>
-                      <div className=" flex justify-between mx-16 absolute   top-10 right-8">
-                        {/* Heart Icon */}
-                        
-                        <div className='flex-col items-center justify-center text-center'>
-                          <Heart className='md:hover:h-5 md:hover:w-5'/>
-                          <span >{message.likes}</span>
-                        </div>
-                        
-                      </div>
-                    </div>
-                  
-                </Card>
+      {/* Comments Block */}
+      <div className="px-8 border-2 md:min-h-96 max-w-screen  rounded-2xl ">
+        <span className="tracking-wide text-lg text-muted-foreground">comments</span>
+        {comments.length == 0 ? (
+          <div>
+            <span className="ext-muted-foreground ">No comments yet.</span>
           </div>
-        ))}
-        </>
-        }
+        ) : (
+          <>
+            {comments.map((item) => (
+              <div key={item._id}>
+                <Card className="border max-w-screen text-muted-foreground ">
+                  <CardContent className="flex flex-col  items-start justify-middle space-y-2 md:space-y-0 md:space-x-8 ">
+                    <CardTitle className="flex items-center space-x-2">
+                      <div className="flex items-center">
+                        <Avatar className="h-8 w-8">
+                          <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+                          <AvatarFallback>CN</AvatarFallback>
+                        </Avatar>
+                        <span>@{item.owner}</span>
+                        <div className="flex items-center pt-1.5">
+                          <Dot />
+                          <Separator></Separator>
+                          <p className="relative text-xs text-muted-foreground mx-0">{formatTimeAgo(item.createdAt)}</p>
+                        </div>
+                      </div>
+                    </CardTitle>
+
+                    <div>
+                      <p>{item.comment}</p>
+                    </div>
+                  </CardContent>
+
+                  <CardFooter className="space-x-10">
+                    <div className="flex-col items-center justify-center text-center">
+                      <Heart className="h-5 w-5" />
+                      <span className="tracking-wide text-xs text-muted-foreground">{item.likes}</span>
+                    </div>
+                    <div className="flex-col items-center justify-center text-center cursor-pointer">
+                      <Reply />
+                      <span className="tracking-wide text-xs text-muted-foreground">reply</span>
+                    </div>
+                  </CardFooter>
+                </Card>
+              </div>
+            ))}
+          </>
+        )}
       </div>
     </div>
   )
