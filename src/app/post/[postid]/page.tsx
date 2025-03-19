@@ -7,7 +7,8 @@ import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
 import { formatTimeAgo } from '@/lib/utils'
 import { User } from '@/model/User'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { querySchema } from '@/schemas/querySchema'
+import { responseSchema } from '@/schemas/responseSchema'
 import { Separator } from '@radix-ui/react-dropdown-menu'
 import axios from 'axios'
 import { Dot, Heart, Reply, Loader2 } from 'lucide-react'
@@ -17,11 +18,11 @@ import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
+
 const Post = () => {
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const [query, setQuery] = useState('')
-  const [comments, setComments] = useState([])
+  const [query, setQuery] = useState<z.infer<typeof querySchema>>()
+  const [comments, setComments] = useState<z.infer<typeof responseSchema>[]>([])
   const { data: session } = useSession()
   const user : User = session?.user as User
   const router = useRouter()
@@ -31,7 +32,7 @@ const Post = () => {
       comment: '',
     },
   })
-  const onSubmit = (data: any) => {
+  const onSubmit = async(data: any) => {
     setIsSubmitting(true)
     try {
       if (!user || !session) {
@@ -39,29 +40,44 @@ const Post = () => {
         router.push('/sign-in')
       } else {
         const comment = {
-          messageId: 123,
+          message : data.comment,
+          userId : user._id ,
+          queryId : postid
         }
+        console.log(comment);
+        const tempComment : z.infer<typeof responseSchema> = {
+          message  :  data.comment,
+          owner : user.username,
+          createdAt : new Date(),
+          likes : 0,
+          replies :[]
+        } 
+        setComments([tempComment,...comments])
+        const response = await axios.post('/api/comment' , comment)
+        toast(response.data.message )
       }
-    } catch (error) {} finally {
+    } catch (error) {
+      if(axios.isAxiosError(error)){
+        toast(error.response?.data.message)
+      }
+    } finally {
       setIsSubmitting(false)
     }
   }
 
   useEffect(() => {
     const loadQuery = async () => {
-      setIsLoading(true)
       console.log(postid)
       const response = await axios.post('/api/get-queries', { messageId: postid })
       console.log(response.data)
       setQuery(response.data?.data.query)
       setComments(response.data?.data.comments)
-      setIsLoading(false)
     }
 
     loadQuery()
   }, [postid])
 
-  if (isLoading) {
+  if (!query) {
     return (
       <div className="space-y-4">
         {/* Skeleton Loader for Card Header */}
@@ -87,7 +103,27 @@ const Post = () => {
 
   return (
     <div>
-      <Card className="border hover:border-accent-foreground rounded-none  max-w-screen">
+      {!query  ?
+      <div className="space-y-4">
+        {/* Skeleton Loader for Card Header */}
+        <div className="flex space-x-2">
+          <Skeleton className="h-12 w-12 rounded-full" />
+          <div className="flex flex-col space-y-2">
+            <Skeleton className="w-32 h-4" />
+            <Skeleton className="w-16 h-4" />
+          </div>
+        </div>
+        <Skeleton className="h-48 w-full" />
+        <Skeleton className="h-8 w-24" />
+        <Skeleton className="h-12 w-full" />
+        {/* Skeleton Loader for Comments Section */}
+        <div className="space-y-2">
+          <Skeleton className="h-8 w-1/2" />
+          <Skeleton className="h-8 w-full" />
+          <Skeleton className="h-8 w-3/4" />
+        </div>
+      </div>
+       :<Card className="border hover:border-accent-foreground rounded-none  max-w-screen">
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
             <Avatar className="h-12 w-12">
@@ -121,7 +157,7 @@ const Post = () => {
             </div>
           </div>
         </div>
-      </Card>
+      </Card>}
 
       {/* Comment input */}
       <div className="py-4 px-4">
@@ -146,7 +182,7 @@ const Post = () => {
       </div>
 
       {/* Comments Block */}
-      <div className="px-8 border-2 md:min-h-96 max-w-screen  rounded-2xl ">
+      <div className="md:px-8 px-2 border-2 md:min-h-96 max-w-screen  md:rounded-2xl ">
         <span className="tracking-wide text-lg text-muted-foreground">comments</span>
         {comments.length == 0 ? (
           <div>
@@ -154,12 +190,12 @@ const Post = () => {
           </div>
         ) : (
           <>
-            {comments.map((item) => (
-              <div key={item._id}>
+            {comments.map((item , index) => (
+              <div key={index}>
                 <Card className="border max-w-screen text-muted-foreground ">
                   <CardContent className="flex flex-col  items-start justify-middle space-y-2 md:space-y-0 md:space-x-8 ">
-                    <CardTitle className="flex items-center space-x-2">
-                      <div className="flex items-center">
+                    <CardTitle className="flex items-center space-x-4">
+                      <div className="flex items-center space-x-2">
                         <Avatar className="h-8 w-8">
                           <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
                           <AvatarFallback>CN</AvatarFallback>
@@ -173,8 +209,8 @@ const Post = () => {
                       </div>
                     </CardTitle>
 
-                    <div>
-                      <p>{item.comment}</p>
+                    <div className='mx-10'>
+                      <p>{item.message}</p>
                     </div>
                   </CardContent>
 

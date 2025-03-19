@@ -39,8 +39,6 @@ export async function POST(request : Request){
     
         await newQuery.save()
 
-        
-
         return new Response(
             JSON.stringify({
               success: true,

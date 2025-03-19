@@ -4,7 +4,7 @@ import { authOptions } from "../auth/[...nextauth]/options";
 import { User } from "next-auth";
 import { getServerSession } from "next-auth";
 import mongoose from "mongoose";
-import ResponseModel from "@/model/Response";
+import ResponseModel from "@/model/ResponseModel";
 
 export async function GET(request : Request){
     await dbConnect();
@@ -134,9 +134,43 @@ export async function POST(request : Request){
 
     ]);
     
-    const comments = await ResponseModel.findOne({messageId  : id})
+    //const comments = await ResponseModel.find({queryId  : id})
+    const comments = await ResponseModel.aggregate([
+      {
+        $match  : {queryId : id}
+      },
+      {
+        $lookup: {
+          from: "users", // The collection you're joining with (note: collection names are usually pluralized)
+          localField: "userId", // The field in the QueryModel that holds the owner's ID
+          foreignField: "_id", // The field in the User collection that matches the owner's ID
+          as: "owner", // The array to store the matching user documents
+        },
+      },
+      {
+        $unwind: { // Unwind the "owner" array to merge it into a single object
+          path: "$owner",
+          preserveNullAndEmptyArrays: true, // Preserve documents without an owner
+        },
+      },
+      {
+        $set :{
+          owner : "$owner.username"
+        }
+      },{
+        $project: {
+          owner: 1, // Include the owner field (now a single object, not an array)
+          message: 1, // Include the query field
+          likes: 1, // Include the likes field
+          createdAt: 1, // Include the createdAt field
+        },
+      },
+      {
+        $sort: { updatedAt: -1 }, // Sort by updatedAt field in descending order
+      }
+    ])
 
-    const responseQuery = {query : query[0] ||{} , comments : comments ||[]}
+    const responseQuery = {query : query[0] ||{} , comments : comments }
 
     return new Response(
       JSON.stringify({

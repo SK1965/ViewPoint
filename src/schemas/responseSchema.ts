@@ -9,7 +9,8 @@ export const ReplySchema = z.object({
 
 export const responseSchema = z.object({
     message : z.string() ,
-    userId : z.string(),   
-    queryId : z.string(), 
-    replies : z.array(ReplySchema)  
+    owner : z.string(),
+    replies : z.array(ReplySchema),
+    createdAt : z.date(),
+    likes : z.number()
 })
