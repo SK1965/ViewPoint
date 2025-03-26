@@ -39,7 +39,7 @@ const ExporePage = () => {
   const router = useRouter()
 
   const handleClick = (id : string)=>{
-    router.replace(`/post/${id}`)
+    router.push(`/post/${id}`)
   }
 
   useEffect(
