@@ -41,17 +41,21 @@ export async function GET(request : Request){
      },
      {
          $project : {
-             queryModel : 1,
-             "user.username" : 1 ,
-             likes : 1,
-             createdAt  : 1
+          title:1,
+          owner: 1,
+          avatar :1, // Include the owner field (now a single object, not an array)
+          query: 1, // Include the query field
+          likes: 1,
+          views : 1, // Include the likes field
+          createdAt: 1, // Include the createdAt field
          }
      },
      {
-         $sort : {'updatedAt' : -1}
+         $sort : {'createdAt' : -1  , 'views' : -1   , likes : -1}
      },
      
     ])
+    console.log(queries);
     
     if(!queries){
      return new Response(
@@ -116,20 +120,24 @@ export async function POST(request : Request){
       },
       {
         $set :{
-          owner : "$owner.username"
+          owner : "$owner.username",
+          avatar  : "$owner.avatar"
         }
       }
       ,
       {
         $project: {
-          owner: 1, // Include the owner field (now a single object, not an array)
+          title:1,
+          owner: 1,
+          avatar:1, // Include the owner field (now a single object, not an array)
           query: 1, // Include the query field
-          likes: 1, // Include the likes field
+          likes: 1,
+          views : 1, // Include the likes field
           createdAt: 1, // Include the createdAt field
         },
       },
       {
-        $sort: { updatedAt: -1 }, // Sort by updatedAt field in descending order
+        $sort: { createdAt: -1 , views : -1 , likes : -1 }, // Sort by updatedAt field in descending order
       },
 
     ]);
@@ -159,6 +167,7 @@ export async function POST(request : Request){
         }
       },{
         $project: {
+          title : 1,
           owner: 1, // Include the owner field (now a single object, not an array)
           message: 1, // Include the query field
           likes: 1, // Include the likes field
@@ -166,12 +175,12 @@ export async function POST(request : Request){
         },
       },
       {
-        $sort: { updatedAt: -1 }, // Sort by updatedAt field in descending order
+        $sort: { createdAt: -1 ,views : -1 ,  likes : -1 }, // Sort by updatedAt field in descending order
       }
     ])
 
     const responseQuery = {query : query[0] ||{} , comments : comments }
-
+    
     return new Response(
       JSON.stringify({
        success: true,

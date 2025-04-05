@@ -8,9 +8,10 @@ export const ReplySchema = z.object({
   });
 
 export const responseSchema = z.object({
+    _id : z.string(),
     message : z.string() ,
     owner : z.string(),
     replies : z.array(ReplySchema),
     createdAt : z.date(),
-    likes : z.number()
+    likes : z.array(z.string())
 })

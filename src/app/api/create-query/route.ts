@@ -1,4 +1,5 @@
 import dbConnect from "@/lib/dbConnect"
+import title_generation from "@/lib/title_generate"
 import Query from "@/model/Query"
 import UserModel from "@/model/User"
 
@@ -10,7 +11,7 @@ export async function POST(request : Request){
     dbConnect()
     try {
         const owner = await UserModel.findOne({username}).select('_id')
-
+        const title = await title_generation(query)
         if(!owner){
             return new Response(
                 JSON.stringify({
@@ -35,7 +36,7 @@ export async function POST(request : Request){
             }
           );
         }
-        const newQuery = new Query({query , owner})
+        const newQuery = new Query({title , query , owner})
     
         await newQuery.save()
 

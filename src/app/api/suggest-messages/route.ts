@@ -22,20 +22,24 @@ import QueryModel from "@/model/Query";
         },
         {
           $set :{
-            owner : "$owner.username"
+            owner : "$owner.username",
+            avatar : "$owner.avatar"
           }
         }
         ,
         {
           $project: {
-            owner: 1, // Include the owner field (now a single object, not an array)
-            query: 1, // Include the query field
-            likes: 1, // Include the likes field
-            createdAt: 1, // Include the createdAt field
+            title:1,
+          owner: 1,
+          avatar :1, // Include the owner field (now a single object, not an array)
+          query: 1, // Include the query field
+          likes: 1,
+          views : 1, // Include the likes field
+          createdAt: 1,
           },
         },
         {
-          $sort: { likes: -1  , createdAt :-1}, // Sort by updatedAt field in descending order
+          $sort: {views : -1 ,  likes: -1  , createdAt :-1}, // Sort by updatedAt field in descending order
         },
            
           ])

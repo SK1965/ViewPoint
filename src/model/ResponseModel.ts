@@ -15,7 +15,7 @@ export interface Response extends Document {
   userId: ObjectId,   
   queryId: ObjectId,
   replies: Replies[],  // Accepts an array of Replies
-  likes: number,
+  likes: string[],
   createdAt : Date
 }
 
@@ -35,10 +35,7 @@ const ResponseSchema: Schema<Response> = new Schema({
     ref: "Query",
     required: true,
   },
-  likes: {
-    type: Number,
-    default: 0,
-  },
+  likes: {type:[String] , default:[]},
   replies: [
     {
       owner: { type: mongoose.Types.ObjectId, ref: "User", required: true }, // ObjectId for user reference
