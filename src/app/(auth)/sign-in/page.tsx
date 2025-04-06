@@ -34,8 +34,6 @@ const SigninPage =()=>{
     if(response?.url){
       
     }
-    
-    console.log(response)
     setIsSubmiting(false)
 
   }

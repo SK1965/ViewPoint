@@ -55,7 +55,7 @@ export async function GET(request : Request){
      },
      
     ])
-    console.log(queries);
+    
     
     if(!queries){
      return new Response(

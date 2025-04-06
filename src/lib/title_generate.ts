@@ -68,7 +68,7 @@ const title_generation = async(content  :string)=>{
                         model: enhancedModel,
                         prompt: updatedPrompt
                      });
-    console.log(text);
+    
     
     return text
 

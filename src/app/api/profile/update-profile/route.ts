@@ -7,11 +7,10 @@ export async function PUT(request: Request) {
     const {name,bio , location , website} = await request.json()
 
     await dbConnect()
-    console.log(name);
+    
     
     const session = await getServerSession(authOptions)
     if(!session || !session.user) {
-        console.log("not authenticated")
         return new Response(
             JSON.stringify({
                 success: false,
@@ -32,7 +31,6 @@ export async function PUT(request: Request) {
         )
 
         if(!updatedUser){
-            console.log("user not found")
             return new Response(
                 JSON.stringify({
                     success: false,
@@ -43,7 +41,6 @@ export async function PUT(request: Request) {
                 }
             )
         }
-        console.log(updatedUser);
         
         return new Response(
             JSON.stringify({

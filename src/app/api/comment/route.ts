@@ -8,7 +8,7 @@ export async function POST(request:Request) {
     dbConnect()
     const {message,userId,queryId} =await  request.json()
 
-    console.log(message,userId,queryId)
+    
     if(!userId || !queryId){
         return new Response(
             JSON.stringify({
@@ -28,7 +28,7 @@ export async function POST(request:Request) {
             queryId : new mongoose.Types.ObjectId(queryId) ,
             replies : []
         })
-        console.log(comment);
+        
 
         await comment.save()
         

@@ -30,7 +30,6 @@ export async function GET(request: Request) {
                 }
             )
         }
-        console.log("result", result);
         const {username} = result.data;
         const existingUser = await User.findOne({
             username,

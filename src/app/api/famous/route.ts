@@ -44,7 +44,7 @@ export async function GET(request : Request) {
             } 
           ]);
           
-          console.log(famousQueries);
+          
           
         return new Response(
             JSON.stringify({

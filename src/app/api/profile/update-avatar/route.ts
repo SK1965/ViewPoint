@@ -24,7 +24,7 @@ export async function POST(request :Request){
           buffer
         );
     }else{
-        console.log('file not found');
+        
         
         return new Response(
             JSON.stringify({
@@ -38,7 +38,7 @@ export async function POST(request :Request){
     }
     const session = await getServerSession(authOptions)
     if(!session || !session.user){
-        console.log("not authenticated");
+       
         
         return new Response(
             JSON.stringify({
@@ -54,7 +54,7 @@ export async function POST(request :Request){
     const user = session.user
     const avatar = await uploadOnCloudinary(path.resolve(UPLOAD_DIR, (file as File).name) , 'avatars')
     if(!avatar){
-        console.log("image not uploaded");
+        
         return new Response(
             
             JSON.stringify({
@@ -70,7 +70,7 @@ export async function POST(request :Request){
     try {
         const UpdatedUser : (User | null) = await UserModel.findByIdAndUpdate({_id : user._id} , {avatar : avatar})
         if(!UpdatedUser){
-            console.log("user not found");
+            
             return new Response(
                 
                 JSON.stringify({
@@ -93,7 +93,7 @@ export async function POST(request :Request){
             }
         )
     } catch (error) {
-        console.log(error);
+       
         
         return new Response(
             JSON.stringify({
@@ -112,7 +112,7 @@ export async function DELETE(request :Request){
 
     const session = await getServerSession(authOptions)
     if(!session || !session.user){
-        console.log("not authenticated");
+        
         
         return new Response(
             JSON.stringify({
@@ -130,7 +130,7 @@ export async function DELETE(request :Request){
         const defaultAvatar ="https://res.cloudinary.com/dolb0no3p/image/upload/v1743843389/avatars/yxqejebqvj8md5yhwjln.png"
         const UpdatedUser : (User | null) = await UserModel.findByIdAndUpdate(user._id , {coverImage : defaultAvatar})
         if(!UpdatedUser){
-            console.log("user not found");
+            
             return new Response(
                 JSON.stringify({
                     success : false,
@@ -152,7 +152,7 @@ export async function DELETE(request :Request){
             }
         )
     } catch (error) {
-        console.log(error);
+       
         
         return new Response(
             JSON.stringify({

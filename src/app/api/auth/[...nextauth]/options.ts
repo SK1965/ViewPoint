@@ -29,7 +29,7 @@ export const authOptions: NextAuthOptions = {
                             { email: credentials.identifier } 
                         ]
                     });
-                    console.log(user);
+                    
                     
                     if (!user) {
                         throw new Error("No user found with this username or email");
@@ -69,7 +69,7 @@ export const authOptions: NextAuthOptions = {
                 token.createdAt = user.createdAt;
                 
             }
-            console.log("created token" , token);
+            
             
             return token;
         },
@@ -88,7 +88,7 @@ export const authOptions: NextAuthOptions = {
                 session.user.createdAt = token.createdAt;
                 
             }
-            console.log("created token :" , session);
+            
             
             return session;
         },
@@ -97,13 +97,13 @@ export const authOptions: NextAuthOptions = {
             // You can customize this further depending on the use case
             // For example, based on user roles or a specific URL.
             if (url === "/sign-in" || url === "/") {
-                console.log(baseUrl);
+               
                 
               return baseUrl; // Redirect to the base URL or a specific page
             }
       
             // Optional: If you want to redirect users based on custom logic
-            console.log(url);
+            
             
             return url; // Redirect to the requested URL or a fallback
           },

@@ -15,7 +15,7 @@ export async function POST(request :Request){
     try {
         
         const query = await QueryModel.findById(convertedQueryId)
-        console.log(query)
+        
         if(!query){
             return new Response(
                 JSON.stringify({
@@ -40,7 +40,7 @@ export async function POST(request :Request){
            }
          );
     } catch (error) {
-        console.log(error)
+        
         return new Response(
             JSON.stringify({
              success: false,

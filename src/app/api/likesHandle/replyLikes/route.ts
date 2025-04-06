@@ -31,7 +31,7 @@ export async function POST(request : Request){
         }else{
             reply.likes.push(userId);
         } 
-        console.log( reply);
+        
         await reply.save()
 
         return new Response(

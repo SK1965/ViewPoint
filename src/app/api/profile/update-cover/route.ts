@@ -24,7 +24,7 @@ export async function POST(request :Request){
           buffer
         );
     }else{
-        console.log('file not found');
+       
         
         return new Response(
             JSON.stringify({
@@ -38,7 +38,7 @@ export async function POST(request :Request){
     }
     const session = await getServerSession(authOptions)
     if(!session || !session.user){
-        console.log("not authenticated");
+       
         
         return new Response(
             JSON.stringify({
@@ -54,7 +54,7 @@ export async function POST(request :Request){
     const user = session.user
     const coverImage = await uploadOnCloudinary(path.resolve(UPLOAD_DIR, (file as File).name) , 'coverimages')
     if(!coverImage){
-        console.log("image not uploaded");
+        
         return new Response(
             
             JSON.stringify({
@@ -70,7 +70,6 @@ export async function POST(request :Request){
     try {
         const UpdatedUser : (User | null) = await UserModel.findByIdAndUpdate({_id : user._id} , {coverImage : coverImage})
         if(!UpdatedUser){
-            console.log("user not found");
             return new Response(
                 
                 JSON.stringify({
@@ -93,7 +92,7 @@ export async function POST(request :Request){
             }
         )
     } catch (error) {
-        console.log(error);
+        
         
         return new Response(
             JSON.stringify({
@@ -112,7 +111,7 @@ export async function DELETE(request :Request){
 
     const session = await getServerSession(authOptions)
     if(!session || !session.user){
-        console.log("not authenticated");
+        
         
         return new Response(
             JSON.stringify({
@@ -130,7 +129,7 @@ export async function DELETE(request :Request){
         
         const UpdatedUser : (User | null) = await UserModel.findByIdAndUpdate(user._id , {coverImage : null})
         if(!UpdatedUser){
-            console.log("user not found");
+            
             return new Response(
                 
                 JSON.stringify({
@@ -152,7 +151,7 @@ export async function DELETE(request :Request){
             }
         )
     } catch (error) {
-        console.log(error);
+        
         
         return new Response(
             JSON.stringify({

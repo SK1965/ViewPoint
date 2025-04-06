@@ -51,7 +51,7 @@ export async function GET(request  :Request , { params }: { params: Promise<{ us
 
 
     }catch(error){
-        console.log(error)
+        
         return new Response(
             JSON.stringify({
               success: false,
