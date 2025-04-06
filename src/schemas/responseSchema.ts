@@ -11,6 +11,7 @@ export const responseSchema = z.object({
     _id : z.string(),
     message : z.string() ,
     owner : z.string(),
+    avatar : z.string().optional(),
     replies : z.array(ReplySchema),
     createdAt : z.date(),
     likes : z.array(z.string())

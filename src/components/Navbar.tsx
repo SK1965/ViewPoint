@@ -76,7 +76,7 @@ const Navbar = () => {
                                 </div>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end">
-                                    <DropdownMenuItem onClick={() => router.push('dashboard')}>
+                                    <DropdownMenuItem onClick={() => router.replace('/dashboard')}>
                                         profile
                                     </DropdownMenuItem>
                                     <DropdownMenuItem onClick={() => setTheme("dark")}>

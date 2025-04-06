@@ -54,6 +54,7 @@ const Post = () => {
           _id: "temp-id-" + Date.now(),
           message: data.comment,
           owner: user.username,
+          avatar : user.avatar || `https://ui-avatars.com/api/?name=${user.username}&background=random`,
           createdAt: new Date(),
           likes: [],
           replies: []
@@ -219,7 +220,7 @@ const Post = () => {
                 <CardContent className="pt-4">
                   <div className="flex items-center gap-2 mb-2">
                     <Avatar className="h-8 w-8">
-                      <AvatarImage src={`https://avatar.vercel.sh/${item.owner}`} alt={item.owner} />
+                      <AvatarImage src={item.avatar||`https://avatar.vercel.sh/${item.owner}`} alt={item.owner} />
                       <AvatarFallback>{item.owner.substring(0, 2).toUpperCase()}</AvatarFallback>
                     </Avatar>
                     <div>

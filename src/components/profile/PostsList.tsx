@@ -37,7 +37,7 @@ function PostCard({ post }: PostCardProps) {
     <article className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
       <div className="p-6">
         <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">
-          <a href={`/posts/${post._id}`} className="hover:text-blue-600 dark:hover:text-blue-400">
+          <a href={`/post/${post._id}`} className="hover:text-blue-600 dark:hover:text-blue-400">
             {post.title || "Untitled Post"}
           </a>
         </h3>

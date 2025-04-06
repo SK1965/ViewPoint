@@ -94,7 +94,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
       {/* 3D Model Background */}
-      <div className="absolute lg:block hidden left-10 top-40 w-96 h-96 opacity-90">
+      <div className="absolute xl:block hidden left-10 top-40 w-96 h-96 opacity-90">
         <ThreeDModel />
       </div>
       
@@ -220,7 +220,7 @@ export default function Home() {
                             </CardTitle>
                           </CardHeader>
 
-                          <CardContent className="px-4 pt-3 pb-3">
+                          <CardContent className="px-4 pt-3 pb-3" onClick={()=>{router.push(`/post/${message._id.toString()}`)}}>
                             <div>
                               {expandedMessage === message._id ? (
                                 <p className="text-sm md:text-base text-gray-800 dark:text-gray-200 leading-relaxed">
@@ -249,14 +249,7 @@ export default function Home() {
                             </div>
                             <div className="flex items-center gap-2">
                               <QueryLike like={message.likes} queryId={message._id} />
-                              <Button 
-                                variant="ghost" 
-                                size="sm" 
-                                className="text-xs flex items-center text-blue-600 hover:text-blue-700 dark:text-blue-400 p-1 h-7"
-                                onClick={() => router.push(`/story/${message._id}`)}
-                              >
-                                View <ChevronRight className="h-3 w-3 ml-1" />
-                              </Button>
+                              
                             </div>
                           </CardFooter>
                         </Card>
@@ -265,11 +258,7 @@ export default function Home() {
                   ))}
                 </CarouselContent>
 
-                {/* Controls */}
-                <div className="flex justify-center mt-2 gap-2">
-                  <CarouselPrevious className="transform-none bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 rounded-full h-8 w-8 shadow" />
-                  <CarouselNext className="transform-none bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 rounded-full h-8 w-8 shadow" />
-                </div>
+               
           </Carousel>
 
           )}
