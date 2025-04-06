@@ -63,8 +63,8 @@ const Navbar = () => {
     )
 
     return (
-        <nav className="sticky top-0 bg-background p-3 shadow-md z-50 border-b">
-            <div className="max-w-6xl mx-auto flex justify-between items-center">
+        <nav className="sticky top-0 bg-background p-3 px-6 shadow-md z-50 border-b">
+            <div className=" mx-auto flex justify-between items-center">
                 <Link href="/" className="text-xl font-bold hover:text-primary transition-colors">
                     View Point
                 </Link>
@@ -84,7 +84,7 @@ const Navbar = () => {
                 </div>
                 
                 {/* Desktop menu */}
-                <div className="hidden md:flex items-center space-x-4">
+                <div className="hidden md:flex items-center space-x-12">
                     {mounted && <ThemeToggle className="h-9 w-9 rounded-full" />}
 
                     {mounted && session ? (
@@ -99,7 +99,7 @@ const Navbar = () => {
                                 <DropdownMenuItem onClick={navigateToDashboard} className="cursor-pointer">
                                     Profile
                                 </DropdownMenuItem>
-                                <DropdownMenuItem className="cursor-pointer">
+                                <DropdownMenuItem className="cursor-pointer" onClick={() => router.push('/subscription')}>
                                     Subscription
                                 </DropdownMenuItem>
                                 <DropdownMenuItem className="cursor-pointer focus:bg-background">
@@ -146,7 +146,7 @@ const Navbar = () => {
                                     Profile
                                 </Button>
                                 
-                                <Button size="sm" variant="outline" className="w-full justify-start">
+                                <Button size="sm" variant="outline" className="w-full justify-start" onClick={() => router.push('/subscription')}>
                                     Subscription
                                 </Button>
                                 

@@ -1,29 +1,58 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 
-// This exports the default NextAuth middleware behavior
-export { default } from 'next-auth/middleware';
+// Define your protected routes here
+const protectedRoutes = [
+  '/dashboard',
+  '/profile',
+  '/settings',
+  // Add other protected routes
+];
 
-// The custom middleware logic
 export async function middleware(request: NextRequest) {
   // Retrieve the token from the request using next-auth
   const token = await getToken({ req: request });
-
+  
   // Get the requested URL
-  const url = request.nextUrl;
-
-  // If the user is already authenticated (has a token) and is trying to access 
-  // routes like sign-in, sign-up, or verify, redirect them away from those pages
+  const { pathname } = request.nextUrl;
+  
+  // Check if the route is protected and user is not authenticated
+  const isProtectedRoute = protectedRoutes.some(route => 
+    pathname.startsWith(route)
+  );
+  
+  if (isProtectedRoute && !token) {
+    // Create the sign-in URL with the return URL parameter
+    const signInUrl = new URL('/sign-in', request.url);
+    signInUrl.searchParams.set('returnUrl', pathname);
+    return NextResponse.redirect(signInUrl);
+  }
+  
+  // If user is already authenticated and trying to access auth pages, redirect to dashboard
   if (token && (
-    url.pathname.startsWith('/sign-in') ||
-    url.pathname.startsWith('/sign-up') ||
-    url.pathname.startsWith('/verify')
+    pathname.startsWith('/sign-in') ||
+    pathname.startsWith('/sign-up') ||
+    pathname.startsWith('/verify')
   )) {
-    // Redirect to the homepage or dashboard (or any other page you wish)
-    return NextResponse.redirect(new URL('/dashboard', request.url));  // Example: Redirect to /dashboard
+    // Check if there's a returnUrl in the query parameters
+    const url = request.nextUrl.clone();
+    const returnUrl = url.searchParams.get('returnUrl');
+    
+    // If there's a valid return URL, redirect to it
+    if (returnUrl && returnUrl.startsWith('/') && !returnUrl.startsWith('//')) {
+      return NextResponse.redirect(new URL(returnUrl, request.url));
+    }
+    
+    // Otherwise, redirect to dashboard
+    return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 
-  // If no token is found (user not logged in), nothing needs to be done, 
-  // as the request will continue its normal flow for sign-in, sign-up, etc.
   return NextResponse.next();
 }
+
+// Specify which paths this middleware should run on
+export const config = {
+  matcher: [
+    '/((?!api|_next/static|_next/image|favicon.ico).*)'
+  ]
+};

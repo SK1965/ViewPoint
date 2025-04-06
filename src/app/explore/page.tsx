@@ -66,10 +66,10 @@ const ExporePage = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-64">
+      <div className='max-w-5xl mx-auto px-4 py-8 space-y-8'>
         <div className="animate-pulse space-y-6">
-          {[1, 2, 3].map((item) => (
-            <div key={item} className="bg-gray-100 h-36 w-full md:w-[600px] rounded-lg"></div>
+          {[1, 2, 3 , 5,6,7].map((item) => (
+            <div key={item} className="bg-gray-700 h-36 w-full max-w-5xl rounded-lg"></div>
           ))}
         </div>
       </div>

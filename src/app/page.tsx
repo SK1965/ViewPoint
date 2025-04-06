@@ -36,6 +36,7 @@ export default function Home() {
   const [queries, setQueries] = useState<z.infer<typeof querySchema>[]>([]);
   const [isSubmiting, setIsSubmiting] = useState(false);
   const [expandedMessage, setExpandedMessage] = useState<string | null>(null);
+  
   const resolver = zodResolver(messageSchema);
   const router = useRouter();
   const { data: session } = useSession();
@@ -57,7 +58,7 @@ export default function Home() {
     const content = data.content;
     setIsSubmiting(true);
     if (!session || !session.user) {
-      router.replace('/sign-in');
+      router.push(`/sign-in?returnUrl=${encodeURIComponent(window.location.href)}`);
       return;
     }
     try {
@@ -78,7 +79,6 @@ export default function Home() {
       setIsSubmiting(false);
     }
   };
-
   useEffect(() => {
     const fetchQueries = async () => {
       try {
@@ -141,7 +141,7 @@ export default function Home() {
                   <div className="flex justify-end">
                     <Button 
                       type="submit" 
-                      className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8"
+                      className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 flex items-center justify-center"
                     >
                       {isSubmiting ? (
                         <Loader2 className="animate-spin mr-2" />
@@ -151,6 +151,7 @@ export default function Home() {
                       Share Story
                     </Button>
                   </div>
+
                 </form>
               </Form>
             </CardContent>
