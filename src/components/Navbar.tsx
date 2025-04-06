@@ -1,12 +1,12 @@
 "use client"
+
 import { Moon, Sun, Menu, UserRound } from "lucide-react"
-import { useTheme} from "next-themes"
-import React, { useState } from 'react'
+import { useTheme } from "next-themes"
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useSession, signOut } from 'next-auth/react'
 import { User } from 'next-auth'
 import { Button } from './ui/button'
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,125 +18,145 @@ import { useRouter } from "next/navigation"
 const Navbar = () => {
     const router = useRouter()
     const { data: session } = useSession()
-    const user: User = session?.user as User
+    const user = session?.user as User
     const { setTheme } = useTheme()
     const [isMenuOpen, setIsMenuOpen] = useState(false)
-    const toggleMenu = () => {
-        setIsMenuOpen(!isMenuOpen)
-    }
+    // Add mounted state to prevent hydration mismatch
+    const [mounted, setMounted] = useState(false)
+
+    // Effect to set mounted state after hydration
+    useEffect(() => {
+        setMounted(true)
+    }, [])
+
+    const toggleMenu = () => setIsMenuOpen(prev => !prev)
+    
+    const handleSignOut = () => signOut()
+    
+    const navigateToDashboard = () => router.push('/dashboard')
+
+    // Theme options for reuse
+    const themeOptions = [
+        { name: "Light", action: () => setTheme("light") },
+        { name: "Dark", action: () => setTheme("dark") },
+        { name: "System", action: () => setTheme("system") }
+    ]
+
+    // Theme toggle button component for reuse
+    const ThemeToggle = ({ className = "" }) => (
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="icon" className={className}>
+                    <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                    <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                    <span className="sr-only">Toggle theme</span>
+                </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+                {themeOptions.map((option) => (
+                    <DropdownMenuItem key={option.name} onClick={option.action}>
+                        {option.name}
+                    </DropdownMenuItem>
+                ))}
+            </DropdownMenuContent>
+        </DropdownMenu>
+    )
 
     return (
-        <nav className='p-2 md:p-3 shadow-md z-10 '>
-            <div className="lg:mx-14 flex justify-between items-center">
-                <a href="#" className="text-xl font-bold">
+        <nav className="sticky top-0 bg-background p-3 shadow-md z-50 border-b">
+            <div className="max-w-6xl mx-auto flex justify-between items-center">
+                <Link href="/" className="text-xl font-bold hover:text-primary transition-colors">
                     View Point
-                </a>
+                </Link>
                 
-                {/* Mobile menu button - visible on small screens */}
-                <div className="block md:hidden">
+                {/* Mobile menu button */}
+                <div className="md:hidden">
                     <Button 
                         variant="ghost" 
-                        size="lg" 
+                        size="sm" 
                         onClick={toggleMenu}
+                        aria-expanded={isMenuOpen}
+                        aria-controls="mobile-menu"
                         aria-label="Toggle menu"
                     >
-                        <Menu className="h-8 w-8" />
+                        <Menu className="h-6 w-6" />
                     </Button>
                 </div>
                 
-                {/* Desktop menu - hidden on mobile, visible on md and above */}
-                <div className="hidden md:flex items-center space-x-6">
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="outline" className="h-10 w-10 p-0 rounded-full" >
-                                <Sun className="h-[1.5rem] w-[1.5rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                                <Moon className="absolute h-[1.5rem] w-[1.5rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-                                <span className="sr-only">Toggle theme</span>
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => setTheme("light")}>
-                                Light
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => setTheme("dark")}>
-                                Dark
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => setTheme("system")}>
-                                System
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                {/* Desktop menu */}
+                <div className="hidden md:flex items-center space-x-4">
+                    {mounted && <ThemeToggle className="h-9 w-9 rounded-full" />}
 
-                    {session ? (
-                        <div className="text-center">
-                            <DropdownMenu >
-                                <DropdownMenuTrigger asChild>
-                                <div className="p-2 rounded-full border-2 ">         
-                                    <UserRound className="w-6 h-6" />                    
-                                </div>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end">
-                                    <DropdownMenuItem onClick={() => router.replace('/dashboard')}>
-                                        profile
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem onClick={() => setTheme("dark")}>
-                                        subscription
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem onClick={() =>signOut()}>
-                                    <Button>
-                                        SignOut
+                    {mounted && session ? (
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="outline" size="icon" className="h-10 w-10 rounded-full p-0 border-2">         
+                                    <UserRound className="h-5 w-5" />
+                                    <span className="sr-only">User menu</span>                   
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-48">
+                                <DropdownMenuItem onClick={navigateToDashboard} className="cursor-pointer">
+                                    Profile
+                                </DropdownMenuItem>
+                                <DropdownMenuItem className="cursor-pointer">
+                                    Subscription
+                                </DropdownMenuItem>
+                                <DropdownMenuItem className="cursor-pointer focus:bg-background">
+                                    <Button onClick={handleSignOut} className="w-full" variant="destructive" size="sm">
+                                        Sign Out
                                     </Button>
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </div>
-                    ) : (
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    ) : mounted ? (
                         <Link href="/sign-in">
-                            <Button variant='outline' className="bg-slate-100 text-black">Login</Button>
+                            <Button variant="default" size="sm">Login</Button>
                         </Link>
+                    ) : (
+                        <div className="h-10 w-16 animate-pulse rounded-md bg-muted" />
                     )}
                 </div>
             </div>
             
-            {/* Mobile menu dropdown - toggle visibility based on isMenuOpen */}
-            {isMenuOpen && (
-                <div className="md:hidden absolute w-48 top-16  right-12   shadow-lg border-2 border-accent">
-                    <div className="flex flex-col justify-center space-y-4 p-4">
-                        {/* Mobile theme toggle */}
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button variant="outline" size="icon" className="">
-                                    <Sun className=" rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                                    <Moon className="absolute  rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-                                    <span className="sr-only">Toggle theme</span>
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                                <DropdownMenuItem onClick={() => setTheme("light")}>
-                                    Light
-                                </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => setTheme("dark")}>
-                                    Dark
-                                </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => setTheme("system")}>
-                                    System
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-
-                        {/* Mobile login/logout */}
+            {/* Mobile menu dropdown */}
+            {isMenuOpen && mounted && (
+                <div 
+                    id="mobile-menu"
+                    className="md:hidden absolute right-4 mt-2 w-60 bg-background rounded-md shadow-lg border border-border"
+                >
+                    <div className="flex flex-col space-y-3 p-4">
+                        <div className="flex items-center justify-between">
+                            <span className="font-medium">Theme</span>
+                            <ThemeToggle />
+                        </div>
+                        
+                        <div className="h-px bg-border my-1" />
+                        
                         {session ? (
                             <>
-                                <div className="text-center">
-                                    Welcome, {user.username || user.email}
+                                <div className="flex items-center space-x-2">
+                                    <UserRound className="h-4 w-4" />
+                                    <span className="text-sm font-medium truncate">
+                                        {user?.username || user?.email || 'User'}
+                                    </span>
                                 </div>
-                                <Button onClick={() => signOut()} variant='outline' className="bg-slate-100 text-black w-full">
-                                    Logout
+                                
+                                <Button size="sm" onClick={navigateToDashboard} variant="outline" className="w-full justify-start">
+                                    Profile
+                                </Button>
+                                
+                                <Button size="sm" variant="outline" className="w-full justify-start">
+                                    Subscription
+                                </Button>
+                                
+                                <Button size="sm" onClick={handleSignOut} variant="destructive" className="w-full">
+                                    Sign Out
                                 </Button>
                             </>
                         ) : (
                             <Link href="/sign-in" className="w-full">
-                                <Button variant='outline' className="align-middle">
+                                <Button size="sm" variant="default" className="w-full">
                                     Login
                                 </Button>
                             </Link>

@@ -22,7 +22,7 @@ export default function RootLayout({
             defaultTheme="system"
             enableSystem
             disableTransitionOnChange>
-        <Navbar></Navbar>
+        <Navbar ></Navbar>
         {children}
         </ThemeProvider>
       <Toaster/>
