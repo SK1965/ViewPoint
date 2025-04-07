@@ -107,7 +107,7 @@ const SigninPage = () => {
         <div className="text-center mt-4">
           <p>
             Already a member?{' '}
-            <Link href="/signup" className="text-blue-600 hover:text-blue-800">
+            <Link href="/sign-up" className="text-blue-600 hover:text-blue-800">
               Register
             </Link>
           </p>
