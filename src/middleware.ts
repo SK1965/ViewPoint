@@ -3,8 +3,6 @@ import { getToken } from 'next-auth/jwt';
 
 // Define your protected routes here
 const protectedRoutes = [
-  '/dashboard',
-  '/profile',
   '/settings',
   // Add other protected routes
 ];
