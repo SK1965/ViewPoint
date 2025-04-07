@@ -142,7 +142,7 @@ export default function UserProfilePage() {
                   </div>
                   <div className="flex items-center mr-4">
                     <ThumbsUp className="h-4 w-4 mr-1" />
-                    <span>{post.likes}</span>
+                    <span>{post.likes.length}</span>
                   </div>
                   <div className="flex items-center">
                     <MessageSquare className="h-4 w-4 mr-1" />
