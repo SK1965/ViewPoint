@@ -1,5 +1,4 @@
-"use client"
-// components/profile/ProfileHeader.tsx
+'use client'
 
 import React, { useState } from 'react';
 import { MapPin, Link2, Calendar, Edit } from 'lucide-react';
@@ -48,7 +47,7 @@ export default function ProfileHeader({ user, isCurrentUser, onProfileUpdate }: 
       name: user.name || '',
       bio: user.bio || '',
       location: user.location || '',
-      website: user.website || ''
+      
     }
   });
 
@@ -59,7 +58,7 @@ export default function ProfileHeader({ user, isCurrentUser, onProfileUpdate }: 
         name: user.name || '',
         bio: user.bio || '',
         location: user.location || '',
-        website: user.website || ''
+        
       });
     }
     setDialogOpen(open);
@@ -88,6 +87,17 @@ export default function ProfileHeader({ user, isCurrentUser, onProfileUpdate }: 
   const handleCoverImageUpdate = (newImageUrl: string) => {
     onProfileUpdate({ coverImage: newImageUrl });
   };
+
+  // Copy profile link to clipboard
+  const handleCopyProfileLink = async (text: string) => {
+    try {
+      navigator.clipboard.writeText(text);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+    
+ 
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden mb-8">
@@ -206,19 +216,6 @@ export default function ProfileHeader({ user, isCurrentUser, onProfileUpdate }: 
                           )}
                         />
                         
-                        <FormField
-                          control={form.control}
-                          name="website"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Website</FormLabel>
-                              <FormControl>
-                                <Input placeholder="Your website URL" {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
                         
                         <DialogFooter className="mt-4">
                           <Button type="button" variant="outline" onClick={() => handleDialogOpen(false)}>
@@ -237,7 +234,7 @@ export default function ProfileHeader({ user, isCurrentUser, onProfileUpdate }: 
             </div>
             
             <p className="text-gray-700 dark:text-gray-300 mb-4"
-               style={{ whiteSpace: 'pre-line' }}>
+               style={{ whiteSpace: 'pre-line' }} >
                 {`${user.bio}` || ''}
             </p>
 
@@ -251,9 +248,12 @@ export default function ProfileHeader({ user, isCurrentUser, onProfileUpdate }: 
               {user.website && (
                 <div className="flex items-center text-blue-600 dark:text-blue-400 text-sm mr-6">
                   <Link2 className="h-4 w-4 mr-1" />
-                  <a href={user.website} target="_blank" rel="noopener noreferrer" className="hover:underline">
-                    {user.website.replace(/(^\w+:|^)\/\//, '')}
-                  </a>
+                  <button 
+                    onClick={()=>{handleCopyProfileLink()}} 
+                    className="hover:underline cursor-pointer"
+                  >
+                    {user.username}
+                  </button>
                 </div>
               )}
               <div className="flex items-center text-gray-600 dark:text-gray-400 text-sm">
