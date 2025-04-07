@@ -30,7 +30,7 @@ export default function UserProfilePage() {
   const [posts, setPosts] = useState<z.infer<typeof querySchema>[]>([]);
   const [isCurrentUser, setIsCurrentUser] = useState(false);
   const [isSubmiting, setIsSubmiting] = useState(false);
-  const { data: session } = useSession();
+  const { data: session ,status } = useSession();
   const router = useRouter();
 
   // Initialize form with useForm hook outside of conditional logic
@@ -43,6 +43,9 @@ export default function UserProfilePage() {
 
   useEffect(() => {
     setLoading(true);
+    if(status === 'loading'){
+      return; // Wait for session to load
+    }
     if (!session || !session.user) {
       router.push('/sign-in');
       return;
@@ -66,7 +69,7 @@ export default function UserProfilePage() {
     };
 
     fetchProfile();
-  }, [session, router]);
+  }, [status , session, router]);
 
   // Handler to update user data after profile edits
   const handleProfileUpdate = (updatedData: Partial<z.infer<typeof userSchema>>) => {
