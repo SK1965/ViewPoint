@@ -246,7 +246,7 @@ export default function ProfileHeader({ user, isCurrentUser, onProfileUpdate }: 
                   <span>{user.location}</span>
                 </div>
               )}
-               (
+               
                 <div className="flex items-center text-blue-600 dark:text-blue-400 text-sm mr-6">
                   <Link2 className="h-4 w-4 mr-1" />
                   <button 
@@ -256,7 +256,7 @@ export default function ProfileHeader({ user, isCurrentUser, onProfileUpdate }: 
                     {user.username}
                   </button>
                 </div>
-              )
+              
               <div className="flex items-center text-gray-600 dark:text-gray-400 text-sm">
                 <Calendar className="h-4 w-4 mr-1" />
                 <span>
