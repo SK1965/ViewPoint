@@ -5,7 +5,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/
 import { Input } from '@/components/ui/input'
 import { signInSchema } from '@/schemas/signInSchema'
 import { zodResolver } from '@hookform/resolvers/zod'
-import React, { useState } from 'react'
+import React, { useState, Suspense } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
@@ -66,13 +66,13 @@ const SigninPage = () => {
   }
 
   return (
-    <div className='flex justify-center items-center min-h-screen border-accent'>
-      <div className='w-full max-w-md p-8 space-y-8 border-2 rounded-lg shadow-md'>
-        <div className='text-center'>
-          <h1 className='text-4xl font-extrabold tracking-tight lg:text-5xl mb-6'>
+    <div className="flex justify-center items-center min-h-screen border-accent">
+      <div className="w-full max-w-md p-8 space-y-8 border-2 rounded-lg shadow-md">
+        <div className="text-center">
+          <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-6">
             Join ViewPoint
           </h1>
-          <p className='mb-4'>Signin to start your anonymous adventure</p>
+          <p className="mb-4">Signin to start your anonymous adventure</p>
         </div>
 
         <Form {...form}>
@@ -102,21 +102,22 @@ const SigninPage = () => {
               )}
             />
             <Button type="submit" className="w-full">
-              {isSubmitting ? <Loader2 className='animate-spin mr-2' /> : "Sign In"}
+              {isSubmitting ? <Loader2 className="animate-spin mr-2" /> : "Sign In"}
             </Button>
           </form>
         </Form>
-        <div className='text-center mt-4'>
-                <p>
-                  Already a member?{' '}
-                  <Link href='signup' className='text-blue-600 hover:text-blue-800'>
-                  Register
-                  </Link>
-                </p>
-              </div>  
+        <div className="text-center mt-4">
+          <p>
+            Already a member?{' '}
+            <Link href="/signup" className="text-blue-600 hover:text-blue-800">
+              Register
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   )
 }
 
 export default dynamic(() => Promise.resolve(SigninPage), { ssr: false })
+
