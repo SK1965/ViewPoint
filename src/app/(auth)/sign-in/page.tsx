@@ -5,7 +5,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/
 import { Input } from '@/components/ui/input'
 import { signInSchema } from '@/schemas/signInSchema'
 import { zodResolver } from '@hookform/resolvers/zod'
-import React, { useState } from 'react'
+import React, { Suspense, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
@@ -66,57 +66,59 @@ const SigninPage = () => {
   }
 
   return (
-    <div className='flex justify-center items-center min-h-screen border-accent'>
-      <div className='w-full max-w-md p-8 space-y-8 border-2 rounded-lg shadow-md'>
-        <div className='text-center'>
-          <h1 className='text-4xl font-extrabold tracking-tight lg:text-5xl mb-6'>
-            Join ViewPoint
-          </h1>
-          <p className='mb-4'>Signin to start your anonymous adventure</p>
-        </div>
+    <Suspense>
+      <div className='flex justify-center items-center min-h-screen border-accent'>
+        <div className='w-full max-w-md p-8 space-y-8 border-2 rounded-lg shadow-md'>
+          <div className='text-center'>
+            <h1 className='text-4xl font-extrabold tracking-tight lg:text-5xl mb-6'>
+              Join ViewPoint
+            </h1>
+            <p className='mb-4'>Signin to start your anonymous adventure</p>
+          </div>
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <FormField
-              name="identifier"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Username/Email:</FormLabel>
-                  <FormControl>
-                    <Input placeholder="username/email" {...field} />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <FormField
-              name="password"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password:</FormLabel>
-                  <FormControl>
-                    <Input type="password" placeholder="password" {...field} />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <Button type="submit" className="w-full">
-              {isSubmitting ? <Loader2 className='animate-spin mr-2' /> : "Sign In"}
-            </Button>
-          </form>
-        </Form>
-        <div className='text-center mt-4'>
-                <p>
-                  Already a member?{' '}
-                  <Link href='sign-up' className='text-blue-600 hover:text-blue-800'>
-                  Register
-                  </Link>
-                </p>
-              </div>  
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+              <FormField
+                name="identifier"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Username/Email:</FormLabel>
+                    <FormControl>
+                      <Input placeholder="username/email" {...field} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                name="password"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password:</FormLabel>
+                    <FormControl>
+                      <Input type="password" placeholder="password" {...field} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <Button type="submit" className="w-full">
+                {isSubmitting ? <Loader2 className='animate-spin mr-2' /> : "Sign In"}
+              </Button>
+            </form>
+          </Form>
+          <div className='text-center mt-4'>
+                  <p>
+                    Already a member?{' '}
+                    <Link href='sign-up' className='text-blue-600 hover:text-blue-800'>
+                    Register
+                    </Link>
+                  </p>
+                </div>  
+        </div>
       </div>
-    </div>
+    </Suspense>
   )
 }
 
-export default dynamic(() => Promise.resolve(SigninPage), { ssr: false })
+export default dynamic(() => Promise.resolve(SigninPage), { ssr: false})
