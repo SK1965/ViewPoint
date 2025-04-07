@@ -89,9 +89,10 @@ export default function ProfileHeader({ user, isCurrentUser, onProfileUpdate }: 
   };
 
   // Copy profile link to clipboard
-  const handleCopyProfileLink = async (text: string) => {
+  const handleCopyProfileLink = async () => {
+    const profileLink = `${window.location.origin}/u/${user.username}`;
     try {
-      navigator.clipboard.writeText(text);
+      navigator.clipboard.writeText(profileLink);
     } catch (err) {
       console.error(err);
     }
