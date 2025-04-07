@@ -13,7 +13,7 @@ import { resend } from "@/lib/resend";
 
         try{
             await resend.emails.send({
-                from  : 'onboarding@resend.dev',
+                from  : 'viewpoint@resend.dev',
                 to : email,
                 subject : "ViewPoint | Verify your email",
                 react : VerificationEmail({username , otp :VerifyCode}),

@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Heart } from 'react-feather';
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import axios from 'axios';
 import { toast } from 'sonner';
 
 const QueryLike = ({ like, queryId }: { like: string[], queryId: string }) => {
   const { data: session, update } = useSession();
   const router = useRouter();
-  
+  const pathname = usePathname()
   const [liked, setLiked] = useState(false);
   const [likes, setLikes] = useState(like);
   // This useEffect runs on session changes or page reloads
@@ -22,7 +22,7 @@ const QueryLike = ({ like, queryId }: { like: string[], queryId: string }) => {
 
   const handleClick = async () => {
     if (!session || !session.user) {
-      router.push('/sign-in');
+      router.push(`/sign-in?returnUrl=${encodeURIComponent(pathname)}`);
       return;
     }
 

@@ -13,10 +13,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { useRouter } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 
 const Navbar = () => {
     const router = useRouter()
+    const pathname = usePathname()
     const { data: session } = useSession()
     const user = session?.user as User
     const { setTheme } = useTheme()
@@ -110,7 +111,7 @@ const Navbar = () => {
                             </DropdownMenuContent>
                         </DropdownMenu>
                     ) : mounted ? (
-                        <Link href="/sign-in">
+                        <Link href={`/sign-in?returnUrl=${encodeURIComponent(pathname)}`}>
                             <Button variant="default" size="sm">Login</Button>
                         </Link>
                     ) : (
@@ -155,7 +156,7 @@ const Navbar = () => {
                                 </Button>
                             </>
                         ) : (
-                            <Link href="/sign-in" className="w-full">
+                            <Link href={`/sign-in?returnUrl=${encodeURIComponent(pathname)}`} className="w-full">
                                 <Button size="sm" variant="default" className="w-full">
                                     Login
                                 </Button>

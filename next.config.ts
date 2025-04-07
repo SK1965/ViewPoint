@@ -1,7 +1,10 @@
 // next.config.ts
+import { NextConfig } from 'next'
 
-const config = {
-  reactStrictMode: true
-};
+const nextConfig: NextConfig = {
+  images: {
+    domains: ['res.cloudinary.com'], // Add the Cloudinary domain here
+  },
+}
 
-export default config;
+export default nextConfig

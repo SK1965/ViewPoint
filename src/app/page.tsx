@@ -24,7 +24,7 @@ import { z } from 'zod';
 import axios from 'axios';
 import { toast } from 'sonner';
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Textarea } from '@/components/ui/textarea';
 import { formatTimeAgo } from '@/lib/utils';
 import { querySchema } from '@/schemas/querySchema';
@@ -38,6 +38,7 @@ export default function Home() {
   const [expandedMessage, setExpandedMessage] = useState<string | null>(null);
   
   const resolver = zodResolver(messageSchema);
+  const pathname = usePathname()
   const router = useRouter();
   const { data: session } = useSession();
 
@@ -58,7 +59,7 @@ export default function Home() {
     const content = data.content;
     setIsSubmiting(true);
     if (!session || !session.user) {
-      router.push(`/sign-in?returnUrl=${encodeURIComponent(window.location.href)}`);
+      router.push(`/sign-in?returnUrl=${encodeURIComponent(pathname)}`);
       return;
     }
     try {

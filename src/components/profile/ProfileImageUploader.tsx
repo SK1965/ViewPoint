@@ -197,6 +197,7 @@ export default function ProfileImageUploader({
         {!isProfile && <span className="sr-only sm:not-sr-only sm:text-xs ml-1">Update Cover</span>}
       </Button>
 
+
       {/* Upload Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={(open) => {
         if (!open && !isUploading) resetState();
