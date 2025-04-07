@@ -18,7 +18,7 @@ import { usePathname, useRouter } from "next/navigation"
 const Navbar = () => {
     const router = useRouter()
     const pathname = usePathname()
-    const { data: session } = useSession()
+    const { data: session  , status} = useSession()
     const user = session?.user as User
     const { setTheme } = useTheme()
     const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -27,8 +27,9 @@ const Navbar = () => {
 
     // Effect to set mounted state after hydration
     useEffect(() => {
+        if(status === 'loading') return // Do nothing while loading
         setMounted(true)
-    }, [])
+    }, [status , session])
 
     const toggleMenu = () => setIsMenuOpen(prev => !prev)
     
