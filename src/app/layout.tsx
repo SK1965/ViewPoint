@@ -16,7 +16,15 @@ export default function RootLayout({
 }) {
   return (
     <AuthProvider>
-    <html lang="en"  suppressHydrationWarning={true} >  
+    <html lang="en"  suppressHydrationWarning={true} > 
+      <head>
+      <title>{metadata.title}</title>
+            <meta name="description" content={metadata.description} />
+            {/* Favicon */}
+            <link rel="icon" href="/logo.ico" />
+            {/* Optionally, you can add an apple-touch-icon */}
+            <link rel="apple-touch-icon" href="/logo.ico" />
+      </head> 
       <body className="min-h-screen">
       <ThemeProvider attribute="class"
             defaultTheme="system"

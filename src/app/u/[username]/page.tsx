@@ -35,6 +35,15 @@ export default function UserProfilePage() {
     )
   }
 
+  const handleCopyProfileLink = async () => {
+    const profileLink = `${window.location.origin}/u/${user.username}`;
+    try {
+      navigator.clipboard.writeText(profileLink);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
@@ -65,9 +74,12 @@ export default function UserProfilePage() {
                 {user.website && (
                   <div className="flex items-center text-blue-600 dark:text-blue-400 text-sm mr-6">
                     <Link2 className="h-4 w-4 mr-1" />
-                    <a href={user.website} target="_blank" rel="noopener noreferrer" className="hover:underline">
-                      {user.website.replace(/(^\w+:|^)\/\//, '')}
-                    </a>
+                    <button 
+                      onClick={()=>{handleCopyProfileLink()}} 
+                      className="hover:underline cursor-pointer"
+                    >
+                      {user.username}
+                    </button>
                   </div>
                 )}
                 <div className="flex items-center text-gray-600 dark:text-gray-400 text-sm">
