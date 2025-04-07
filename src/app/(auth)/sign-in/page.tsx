@@ -5,17 +5,15 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/
 import { Input } from '@/components/ui/input'
 import { signInSchema } from '@/schemas/signInSchema'
 import { zodResolver } from '@hookform/resolvers/zod'
-import React, { useState, Suspense } from 'react'
+import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
 import { Loader2 } from 'lucide-react'
 import { signIn } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import dynamic from 'next/dynamic'
 import Link from 'next/link'
 
-// Main SignInPage Component wrapped with dynamic import to disable SSR
 const SigninPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const router = useRouter()
@@ -119,5 +117,4 @@ const SigninPage = () => {
   )
 }
 
-export default dynamic(() => Promise.resolve(SigninPage), { ssr: false })
-
+export default SigninPage
